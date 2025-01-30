@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 _wg_conf_dir="/etc/wireguard"
 
@@ -39,15 +39,11 @@ check_connection() {
 switch_server() {
     local next_index=$(( (_curr_index + 1) % ${#_wg_confs[@]} ))
     local next_config="${_wg_confs[$next_index]}"
-
     echo "Connection failed! Switching to server: $next_config"
-
     # Bring down the current connection
     wg-quick down "${_wg_confs[$_curr_index]}" 2>/dev/null
-
     # Start new connection
     wg-quick up "$next_config"
-
     # Update index
     _curr_index=$next_index
 }
