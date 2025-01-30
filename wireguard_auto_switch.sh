@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/bash -x
 
 _wg_conf_dir="/etc/wireguard"
 
-# List of WireGuard configuration files
-_wg_confs=$(ls $_wg_conf_dir/*.conf |awk -F "$_wg_conf_dir/" '{print $2}')
+# Read all WireGuard configuration files into an array
+readarray -t _wg_confs < <(ls "$_wg_conf_dir"/*.conf | awk -F "/" '{print $NF}' | sed 's/.conf//g')
 
 # Target IP or domain for connectivity check
 _test_ip="8.8.8.8"
@@ -11,8 +11,23 @@ _test_ip="8.8.8.8"
 # Check interval in seconds
 _check_int=10
 
-# Current index in the server list
-_curr_index=0
+# Get the currently active WireGuard interface
+_curr_iface=$(wg show | grep 'interface:' | awk '{print $2}')
+
+# Determine the index of the currently active interface in the _wg_confs array
+_curr_index=-1
+for i in "${!_wg_confs[@]}"; do
+    if [[ "${_wg_confs[$i]}" == "$_curr_iface" ]]; then
+        _curr_index=$i
+        break
+    fi
+done
+
+# If no active WireGuard interface is found, start with the first one
+if [[ $_curr_index -eq -1 ]]; then
+    _curr_index=0
+    wg-quick up "${_wg_confs[$_curr_index]}"
+fi
 
 # Function to check connection
 check_connection() {
@@ -27,11 +42,11 @@ switch_server() {
 
     echo "Connection failed! Switching to server: $next_config"
 
-    # Bring down current connection
+    # Bring down the current connection
     wg-quick down "${_wg_confs[$_curr_index]}" 2>/dev/null
 
     # Start new connection
-    wg-quick up "${_wg_conf_dir}/$next_config"
+    wg-quick up "$next_config"
 
     # Update index
     _curr_index=$next_index
