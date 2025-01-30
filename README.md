@@ -12,7 +12,7 @@ This script automatically switches between multiple WireGuard servers if the con
 
 
 ```bash
-cat > /usr/local/bin/wireguard_auto_switch.sh << __EOF__ 
+cat > /usr/bin/wireguard_auto_switch.sh << __EOF__ 
 #!/bin/bash
 
 _wg_conf_dir="/etc/wireguard"
@@ -74,7 +74,7 @@ cat > /etc/init.d/wireguard-switch << __EOF__
 # Description:       Monitors connectivity and switches the WireGuard server if the connection fails.
 ### END INIT INFO
 
-SCRIPT="/usr/local/bin/wireguard_auto_switch.sh"
+SCRIPT="/usr/bin/wireguard_auto_switch.sh"
 PIDFILE="/var/run/wireguard-switch.pid"
 
 start() {
@@ -121,7 +121,7 @@ __EOF__
 
 
 
-chmod +x /usr/local/bin/wireguard_auto_switch.sh /etc/init.d/wireguard-switch
+chmod +x /usr/bin/wireguard_auto_switch.sh /etc/init.d/wireguard-switch
 
 
 update-rc.d wireguard-switch defaults
