@@ -12,7 +12,7 @@ This script automatically switches between multiple WireGuard servers if the con
 
 
 ```bash
-cat > /usr/bin/wireguard_auto_switch.sh << EOFSCRIPT
+cat << EOFSCRIPT > /usr/bin/wireguard_auto_switch.sh
 #!/bin/bash
 
 _wg_conf_dir="/etc/wireguard"
@@ -62,7 +62,7 @@ done
 
 EOFSCRIPT
 
-cat > /etc/init.d/wireguard-switch << EOFINIT
+cat > << EOFINIT > /etc/init.d/wireguard-switch
 #!/bin/bash
 ### BEGIN INIT INFO
 # Provides:          wireguard-switch
