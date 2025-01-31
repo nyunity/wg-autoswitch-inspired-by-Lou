@@ -14,7 +14,7 @@ echo_log() {
 manage_log_size() {
     if [[ -f "$_log_file" && $(stat -c%s "$_log_file") -ge $_max_log_size ]]; then
         echo "$(date '+%Y-%m-%d %H:%M:%S') - Log file exceeded 5MB, truncating..." | tee -a "$_log_file"
-        truncate -s 0 "$_log_file"
+        truncate -s -4M "$_log_file"
     fi
 }
 
@@ -76,8 +76,8 @@ switch_server() {
     fi
     
     # Pause after switching
-    echo_log "Pausing for 30 seconds after switching..."
-    sleep 30
+    echo_log "Pausing for 60 seconds after switching..."
+    sleep 60
     
     # Update index
     _curr_index=$next_index
