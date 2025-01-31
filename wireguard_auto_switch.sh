@@ -48,11 +48,11 @@ done
 if [[ $_curr_index -eq -1 ]]; then
     echo_log "No active WireGuard connection found. Starting first available configuration..."
     _curr_index=0
-    wg-quick up "${_wg_confs[$_curr_index]}" 2>>"$_log_file" || {
+    if ! wg-quick up "${_wg_confs[$_curr_index]}" 2>>"$_log_file"; then
         echo_log "Error starting ${_wg_confs[$_curr_index]}"
         exit 1
-    }
-}
+    fi
+fi
 
 # Function to check connection
 check_connection() {
@@ -70,10 +70,10 @@ switch_server() {
     wg-quick down "${_wg_confs[$_curr_index]}" 2>>"$_log_file" || echo_log "Error stopping ${_wg_confs[$_curr_index]}"
     
     # Start new connection
-    wg-quick up "$next_config" 2>>"$_log_file" || {
+    if ! wg-quick up "$next_config" 2>>"$_log_file"; then
         echo_log "Error starting $next_config"
         exit 1
-    }
+    fi
     
     # Pause after switching
     echo_log "Pausing for 30 seconds after switching..."
