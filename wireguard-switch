@@ -21,15 +21,15 @@ fi
 source "$_config_file"
 
 start() {
-    echo "Starting WireGuard Auto-Switch..."
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - Starting WireGuard Auto-Switch..." >> "$_log_file"
+    echo "Starting  LouCipher's WireGuard Auto-Switch..."
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Starting  LouCipher\'s WireGuard Auto-Switch..." >> "$_log_file"
     nohup $SCRIPT >>"$_log_file"  2>&1 & echo $! > $PIDFILE
     echo "Started with PID $(cat $PIDFILE)"
 }
 
 stop() {
-    echo "Stopping WireGuard Auto-Switch..."
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - Stopping WireGuard Auto-Switch..."  >> "$_log_file"
+    echo "Stopping  LouCipher's WireGuard Auto-Switch..."
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Stopping  LouCipher\'s WireGuard Auto-Switch..."  >> "$_log_file"
     if [ -f $PIDFILE ]; then
         kill $(cat $PIDFILE)
         rm -f $PIDFILE
@@ -47,9 +47,9 @@ restart() {
 
 status() {
     if [ -f $PIDFILE ]; then
-        echo "WireGuard Auto-Switch is running with PID $(cat $PIDFILE)"
+        echo " LouCipher\'s WireGuard Auto-Switch is running with PID $(cat $PIDFILE)"
     else
-        echo "WireGuard Auto-Switch is not running."
+        echo " LouCipher\'s WireGuard Auto-Switch is not running."
     fi
 }
 
