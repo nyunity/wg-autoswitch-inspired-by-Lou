@@ -13,7 +13,7 @@ echo_log() {
 # Function to manage log file size
 manage_log_size() {
     if [[ -f "$_log_file" && $(stat -c%s "$_log_file") -ge $_max_log_size ]]; then
-        echo_log "Log file exceeded 5MB, truncating..."
+        echo "$(date '+%Y-%m-%d %H:%M:%S') - Log file exceeded 5MB, truncating..." | tee -a "$_log_file"
         truncate -s 0 "$_log_file"
     fi
 }
