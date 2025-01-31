@@ -14,7 +14,7 @@ echo_log() {
 manage_log_size() {
     if [[ -f "$_log_file" && $(stat -c%s "$_log_file") -ge $_max_log_size ]]; then
         echo_log "Log file exceeded 5MB, truncating..."
-        truncate -s 1 "$_log_file"
+        truncate -s 0 "$_log_file"
     fi
 }
 
@@ -46,12 +46,13 @@ done
 
 # If no active WireGuard interface is found, start with the first one
 if [[ $_curr_index -eq -1 ]]; then
+    echo_log "No active WireGuard connection found. Starting first available configuration..."
     _curr_index=0
     wg-quick up "${_wg_confs[$_curr_index]}" 2>>"$_log_file" || {
         echo_log "Error starting ${_wg_confs[$_curr_index]}"
         exit 1
     }
-fi
+}
 
 # Function to check connection
 check_connection() {
@@ -74,6 +75,10 @@ switch_server() {
         exit 1
     }
     
+    # Pause after switching
+    echo_log "Pausing for 30 seconds after switching..."
+    sleep 30
+    
     # Update index
     _curr_index=$next_index
 }
@@ -85,4 +90,3 @@ while true; do
     fi
     sleep "$_check_int"
 done
-
