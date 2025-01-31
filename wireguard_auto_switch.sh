@@ -69,8 +69,8 @@ switch_server() {
     fi
     
     # Pause after switching
-    echo_log "Pausing for 30 seconds after switching..."
-    sleep 30
+    echo_log "Pausing for $_switch_pause seconds after switching..."
+    sleep "$_switch_pause"
     
     # Update index
     _curr_index=$next_index

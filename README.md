@@ -23,6 +23,11 @@ chmod +x /usr/bin/wireguard_auto_switch.sh /etc/init.d/wireguard-switch
 update-rc.d wireguard-switch defaults
 ```
 
+Configuration file for the script: 
+````bash
+/etc/wireguard/wg_auto_switch.conf
+```
+
 
 To start the service:
 ```bash
