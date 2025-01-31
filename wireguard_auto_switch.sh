@@ -1,7 +1,14 @@
 #!/bin/bash
 
+# Check if configuration file exists
+_config_file="/etc/wireguard/wg_auto_switch.conf"
+if [[ ! -f "$_config_file" ]]; then
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Configuration file $_config_file not found! Exiting." | tee -a "/var/log/wireguard_failover.log"
+    exit 1
+fi
+
 # Load external configuration file
-source /etc/wireguard/wg_auto_switch.conf
+source "$_config_file"
 
 # Function to log messages and check log file size
 echo_log() {
@@ -83,4 +90,3 @@ while true; do
     fi
     sleep "$_check_int"
 done
-
