@@ -24,7 +24,7 @@ update-rc.d wireguard-switch defaults
 ```
 
 Configuration file for the script: 
-````bash
+```bash
 /etc/wireguard/wg_auto_switch.conf
 ```
 
