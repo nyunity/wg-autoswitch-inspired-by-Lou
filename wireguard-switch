@@ -14,7 +14,7 @@ PIDFILE="/var/run/wireguard-switch.pid"
 
 _config_file="/etc/wireguard/wg_auto_switch.conf"
 if [[ ! -f "$_config_file" ]]; then
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - Configuration file $_config_file not found! Exiting." | tee -a "/var/log/wireguard_failover.log"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Configuration file $_config_file not found! Exiting." | tee -a "$_log_file"
     exit 1
 fi
 
@@ -22,12 +22,14 @@ source "$_config_file"
 
 start() {
     echo "Starting WireGuard Auto-Switch..."
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Starting WireGuard Auto-Switch..." >> "$_log_file"
     nohup $SCRIPT >>"$_log_file"  2>&1 & echo $! > $PIDFILE
     echo "Started with PID $(cat $PIDFILE)"
 }
 
 stop() {
     echo "Stopping WireGuard Auto-Switch..."
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Stopping WireGuard Auto-Switch..."  >> "$_log_file"
     if [ -f $PIDFILE ]; then
         kill $(cat $PIDFILE)
         rm -f $PIDFILE
