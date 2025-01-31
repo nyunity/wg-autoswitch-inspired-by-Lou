@@ -1,8 +1,7 @@
 #!/bin/bash
 
-_wg_conf_dir="/etc/wireguard"
-_log_file="/var/log/wireguard_failover.log"
-_max_log_size=$((5 * 1024 * 1024))  # 5MB in bytes
+# Load external configuration file
+source /etc/wireguard/wg_auto_switch.conf
 
 # Function to log messages and check log file size
 echo_log() {
@@ -13,24 +12,18 @@ echo_log() {
 # Function to manage log file size
 manage_log_size() {
     if [[ -f "$_log_file" && $(stat -c%s "$_log_file") -ge $_max_log_size ]]; then
-        echo "$(date '+%Y-%m-%d %H:%M:%S') - Log file exceeded 5MB, truncating..." | tee -a "$_log_file"
-        truncate -s -4M "$_log_file"
+        echo "$(date '+%Y-%m-%d %H:%M:%S') - Log file exceeded 5MB, truncating to 2MB..." | tee -a "$_log_file"
+        truncate -s $_truncate_size "$_log_file"
     fi
 }
 
-# Read WireGuard configuration files
-readarray -t _wg_confs < <(ls "$_wg_conf_dir"/*.conf 2>/dev/null | awk -F "/" '{print $NF}' | sed 's/.conf//g')
+# Read WireGuard configuration files excluding the config file itself
+readarray -t _wg_confs < <(ls "$_wg_conf_dir"/*.conf 2>/dev/null | grep -v "wg_auto_switch.conf" | awk -F "/" '{print $NF}' | sed 's/.conf//g')
 
 if [[ ${#_wg_confs[@]} -eq 0 ]]; then
     echo_log "No WireGuard configurations found! Exiting script."
     exit 1
 fi
-
-# Target IP or domain for connectivity check
-_test_ip="8.8.8.8"
-
-# Check interval in seconds
-_check_int=10
 
 # Get the currently active WireGuard interface
 _curr_iface=$(wg show | grep 'interface:' | awk '{print $2}')
@@ -76,8 +69,8 @@ switch_server() {
     fi
     
     # Pause after switching
-    echo_log "Pausing for 60 seconds after switching..."
-    sleep 60
+    echo_log "Pausing for 30 seconds after switching..."
+    sleep 30
     
     # Update index
     _curr_index=$next_index
@@ -90,3 +83,4 @@ while true; do
     fi
     sleep "$_check_int"
 done
+

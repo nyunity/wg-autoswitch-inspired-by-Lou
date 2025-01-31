@@ -15,6 +15,7 @@ This script automatically switches between multiple WireGuard servers if the con
 
 wget -qO /etc/init.d/wireguard-switch  https://raw.githubusercontent.com/Lou-Cipher/wg-autoswitch/refs/heads/main/wireguard-switch
 wget -qO /usr/bin/wireguard_auto_switch.sh https://raw.githubusercontent.com/Lou-Cipher/wg-autoswitch/refs/heads/main/wireguard_auto_switch.sh
+wget -qO /etc/wireguard/wg_auto_switch.conf https://raw.githubusercontent.com/Lou-Cipher/wg-autoswitch/refs/heads/main/wg_auto_switch.conf
 
 chmod +x /usr/bin/wireguard_auto_switch.sh /etc/init.d/wireguard-switch
 
