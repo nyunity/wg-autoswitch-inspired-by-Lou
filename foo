@@ -1,0 +1,77 @@
+#!/bin/bash
+
+_wg_conf_dir="/etc/wireguard"
+_log_file="/var/log/wireguard_failover.log"
+
+# Funktion zum Loggen von Fehlern
+echo_log() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$_log_file"
+}
+
+# WireGuard-Konfigurationsdateien einlesen
+readarray -t _wg_confs < <(ls "$_wg_conf_dir"/*.conf 2>/dev/null | awk -F "/" '{print $NF}' | sed 's/.conf//g')
+
+if [[ ${#_wg_confs[@]} -eq 0 ]]; then
+    echo_log "Keine WireGuard-Konfigurationen gefunden! Beende Skript."
+    exit 1
+fi
+
+# Ziel-IP oder -Domain für die Konnektivitätsprüfung
+_test_ip="8.8.8.8"
+
+# Prüfintervall in Sekunden
+_check_int=10
+
+# Aktive WireGuard-Schnittstelle abrufen
+_curr_iface=$(wg show | grep 'interface:' | awk '{print $2}')
+
+# Index der aktuellen aktiven Schnittstelle bestimmen
+_curr_index=-1
+for i in "${!_wg_confs[@]}"; do
+    if [[ "${_wg_confs[$i]}" == "$_curr_iface" ]]; then
+        _curr_index=$i
+        break
+    fi
+done
+
+# Falls keine aktive WireGuard-Schnittstelle gefunden wird, die erste starten
+if [[ $_curr_index -eq -1 ]]; then
+    _curr_index=0
+    wg-quick up "${_wg_confs[$_curr_index]}" 2>>"$_log_file" || {
+        echo_log "Fehler beim Starten von ${_wg_confs[$_curr_index]}"
+        exit 1
+    }
+fi
+
+# Funktion zur Verbindungskontrolle
+check_connection() {
+    ping -c 2 -W 3 "$_test_ip" &>/dev/null
+    return $?
+}
+
+# Funktion zum Wechseln des WireGuard-Servers
+switch_server() {
+    local next_index=$(( (_curr_index + 1) % ${#_wg_confs[@]} ))
+    local next_config="${_wg_confs[$next_index]}"
+    echo_log "Verbindung fehlgeschlagen! Wechsle zu Server: $next_config"
+    
+    # Aktuelle Verbindung beenden
+    wg-quick down "${_wg_confs[$_curr_index]}" 2>>"$_log_file" || echo_log "Fehler beim Beenden von ${_wg_confs[$_curr_index]}"
+    
+    # Neue Verbindung starten
+    wg-quick up "$next_config" 2>>"$_log_file" || {
+        echo_log "Fehler beim Starten von $next_config"
+        exit 1
+    }
+    
+    # Index aktualisieren
+    _curr_index=$next_index
+}
+
+# Hauptschleife
+while true; do
+    if ! check_connection; then
+        switch_server
+    fi
+    sleep "$_check_int"
+done
