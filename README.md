@@ -19,6 +19,7 @@ I have another script that checks if my server is connected to Mullvad, if not, 
 wget -qO /etc/wireguard/wg_auto_switch.conf https://raw.githubusercontent.com/Lou-Cipher/wg-autoswitch/refs/heads/main/wg_auto_switch.conf
 /etc/systemd/system/ => wireguard-autoswitch.service
 /usr/bin/ => wireguard_auto_switch.sh => chmod +x
+/usr/local/bin/ => wg-check-all.sh => chmod +x
 
 systemctl daemon-reload
 systemctl enable --now wireguard-autoswitch.service
