@@ -1,0 +1,12 @@
+[Unit]
+Description=WireGuard Auto-Switch
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/wireguard_auto_switch.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
