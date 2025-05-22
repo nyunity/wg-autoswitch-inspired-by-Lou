@@ -1,13 +1,13 @@
-# WireGuard Auto-Switch (Init.d Service)
+# WireGuard Auto-Switch (Systemd Service)
 
 This script automatically switches between multiple WireGuard servers if the connection to the current server fails. It runs as an **Init.d service**, ensuring automatic startup on boot.
 
 ## Features
 - **Automatic failover**: If the VPN connection drops, it switches to the next available WireGuard server.
-- **Runs as an Init.d service**: Works on older Linux distributions that use SysVinit instead of systemd.
+- **Runs as an systemd service**: less resources and better log.
 - **Configurable check interval**: Define how often the script should check connectivity.
 - **Persistent operation**: The service runs in the background and ensures a stable VPN connection.
-
+- **Boot Checks**: Checks if the hostname of wgx.conf is available, if not, it tries the next one
 ## Installation
 
 
