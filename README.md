@@ -10,7 +10,7 @@ This script automatically switches between multiple WireGuard servers if the con
 - **Boot Checks**: Checks if the hostname of wgx.conf is available, if not, it tries the next one
 
 ## Bonus
-I have another script that checks if my server is connected to Mullvad, if not, I receive an email and a push notification via ntfy. See wg-mullvad-check.sh.
+I have another script that checks if my server is connected to Mullvad, if not, I receive an email and a push notification via ntfy. See wg-mullvad-check.sh. After using this, insert crontab -e: */5 * * * * /usr/local/bin/wg-check-all.sh
 
 ## Installation
 
