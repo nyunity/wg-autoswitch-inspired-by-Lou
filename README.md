@@ -8,14 +8,21 @@ This script automatically switches between multiple WireGuard servers if the con
 - **Configurable check interval**: Define how often the script should check connectivity.
 - **Persistent operation**: The service runs in the background and ensures a stable VPN connection.
 - **Boot Checks**: Checks if the hostname of wgx.conf is available, if not, it tries the next one
-## Installation
 
+## Bonus
+I have another script that checks if my server is connected to Mullvad, if not, I receive an email and a push notification via ntfy
+
+## Installation
 
 ```bash
 
 wget -qO /etc/wireguard/wg_auto_switch.conf https://raw.githubusercontent.com/Lou-Cipher/wg-autoswitch/refs/heads/main/wg_auto_switch.conf
+/etc/systemd/system/ => wireguard-autoswitch.service
+/usr/bin/ => wireguard_auto_switch.sh => chmod +x
 
-update-rc.d wireguard-switch defaults
+systemctl daemon-reload
+systemctl enable --now wireguard-autoswitch.service
+
 ```
 
 Configuration file for the script: 
