@@ -29,29 +29,3 @@ Configuration file for the script:
 ```bash
 /etc/wireguard/wg_auto_switch.conf
 ```
-
-
-To start the service:
-```bash
-/etc/init.d/wireguard-switch start
-```
-
-To stop the service:
-```bash
-/etc/init.d/wireguard-switch stop
-```
-
-To restart the service:
-```bash
-/etc/init.d/wireguard-switch restart
-```
-
-To check the status:
-```bash
-/etc/init.d/wireguard-switch status
-```
-
-To disable the service:
-```bash
-update-rc.d -f wireguard-switch remove
-```
