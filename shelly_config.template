@@ -1,0 +1,44 @@
+# Shelly Auto-Switch Configuration Template
+# 
+# Copy this file and modify the values according to your setup.
+# Then replace the CONFIG object in the JavaScript files with your values.
+
+# Shelly 2 Device Settings
+SHELLY2_IP="192.168.1.82"     # IP address of your Shelly 2 device
+SHELLY2_PORT="80"             # HTTP port (usually 80)
+RELAY_ID="0"                  # Relay ID to control (0 or 1)
+
+# Communication Settings  
+TIMEOUT="5000"                # HTTP request timeout in milliseconds
+DEBUG="true"                  # Enable debug logging (true/false)
+
+# Authentication (if required)
+AUTH_ENABLED="false"          # Enable authentication (true/false)
+AUTH_USERNAME=""              # Username for Shelly 2 (if auth enabled)
+AUTH_PASSWORD=""              # Password for Shelly 2 (if auth enabled)
+
+# Input Event Configuration
+INPUT_COMPONENT="input:0"     # Input component on Shelly 1
+ON_EVENTS="single_push,btn_down"    # Events that turn relay ON
+OFF_EVENTS="btn_up"           # Events that turn relay OFF
+
+# Example JavaScript CONFIG object:
+# let CONFIG = {
+#   shelly2_ip: "192.168.1.82",
+#   shelly2_port: 80,
+#   relay_id: 0,
+#   timeout: 5000,
+#   debug: true,
+#   auth: {
+#     enabled: false,
+#     username: "",
+#     password: ""
+#   }
+# };
+
+# Notes:
+# - Make sure both Shelly devices are on the same network
+# - Test connectivity using the test_shelly_api.sh script
+# - Enable authentication if your Shelly 2 is accessible from outside your local network
+# - Check Shelly 2 firmware version (should support RPC API - Gen2 devices)
+# - Relay ID 0 is usually the first relay, 1 is the second (for Shelly 2)
